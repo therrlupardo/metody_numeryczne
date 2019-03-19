@@ -1,10 +1,11 @@
 from math import floor
 from matplotlib import pyplot
-import csv
 from dateutil import parser
+import csv
+import os
 
 STARTING_MONEY = 1000
-CURRENCIES = ['./data/hongkong_dolar.csv', './data/usa_dolar.csv', './data/frank_szw.csv','./data/euro.csv' ]
+CURRENCIES = os.listdir('./data')
 
 def ema(n, data, day):
     one_minus_alpha = 1 - (2 / (n - 1))
@@ -87,12 +88,12 @@ def simulation(exchange_rate, signals, money):
 
 if __name__ == '__main__':
     for currency in CURRENCIES:
-        time, exchange_rate = create_data(currency)
+        time, exchange_rate = create_data('./data/' + currency)
         macd = calculate_macd(exchange_rate)
         signal = calculate_signal(macd)
         buying_signals = calculate_buying_signals(macd[26::], signal[17::])
         money_after_simulation = simulation(exchange_rate[26::], buying_signals, STARTING_MONEY)
-        name = currency.split('/')[2].split('.')[0]
+        name = currency.split('.')[0]
         profit = floor(money_after_simulation/STARTING_MONEY * 100 - 100)
         print(name + ": " + str(profit) + "%")
         show_diagrams(time[26::], macd[26::], signal[17::])
