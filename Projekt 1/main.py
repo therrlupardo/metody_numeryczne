@@ -37,7 +37,7 @@ def create_data(file):
 
 def calculate_macd(exchange_rate):
     macd = []
-    for i in range(0, 1000):
+    for i in range(0, len(exchange_rate)):
         if i >= 26:
             temp_ema12 = ema(12, exchange_rate, i)
             temp_ema26 = ema(26, exchange_rate, i)
@@ -52,13 +52,13 @@ def calculate_signal(macd):
         signal.append(ema(9, macd, i))
     return signal
 
-def show_diagrams(time, macd, signal):
+def show_diagrams(time, macd, signal, name):
     pyplot.plot(time, macd, label="macd", color='red')
     pyplot.plot(time, signal, label="signal", color='blue')
     pyplot.legend()
     pyplot.ylabel('Kurs średni')
     pyplot.xlabel('Data')
-    pyplot.title('Kurs dolar hongkongski')
+    pyplot.title('Kurs ' + name)
     pyplot.show()
 
 def calculate_buying_signals(macd, signal):
@@ -87,13 +87,17 @@ def simulation(exchange_rate, signals, money):
         return money
 
 if __name__ == '__main__':
+    overall = 0
     for currency in CURRENCIES:
         time, exchange_rate = create_data('./data/' + currency)
         macd = calculate_macd(exchange_rate)
         signal = calculate_signal(macd)
         buying_signals = calculate_buying_signals(macd[26::], signal[17::])
         money_after_simulation = simulation(exchange_rate[26::], buying_signals, STARTING_MONEY)
-        name = currency.split('.')[0]
-        profit = floor(money_after_simulation/STARTING_MONEY * 100 - 100)
+        name = currency.split('.')[0].replace('_', ' ')
+        profit = floor(money_after_simulation/STARTING_MONEY * 100) - 100
+        overall += profit
         print(name + ": " + str(profit) + "%")
-        show_diagrams(time[26::], macd[26::], signal[17::])
+        show_diagrams(time[26::], macd[26::], signal[17::], name)
+    print("Overall profit: " + str(overall) + "%")
+    print("Avarage profit: " + str(overall/len(CURRENCIES)) + "%")
