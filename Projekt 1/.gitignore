@@ -6,3 +6,8 @@
 */__pycache__/*
 __pycache__/*
 **/__pycache__/*
+sprawozdanie/*.aux
+sprawozdanie/*.fdb*
+sprawozdanie/*.fls
+sprawozdanie/*.log
+sprawozdanie/*.gz

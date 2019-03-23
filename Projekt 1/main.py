@@ -5,22 +5,11 @@ import csv
 import os
 
 STARTING_MONEY = 1000
-CURRENCIES = os.listdir('./data')
-
-
-def show_diagrams(time, macd, signal, name):
-    pyplot.plot(time, macd, label="macd", color='red')
-    pyplot.plot(time, signal, label="signal", color='blue')
-    pyplot.legend()
-    pyplot.ylabel('Kurs średni')
-    pyplot.xlabel('Data')
-    pyplot.title('Kurs ' + name)
-    pyplot.show()
 
 
 def simulation(exchange_rate, signals, money):
     currency = 0
-    for it in range(len(signals)):
+    for it in range(len(exchange_rate)):
         if signals[it] == "buy":
             if money != 0:
                 currency = money * exchange_rate[it]
@@ -32,6 +21,38 @@ def simulation(exchange_rate, signals, money):
     else:
         return money
 
+class Diagrams:
+    def show_macd_signal_diagram(self, time, macd, signal):
+        pyplot.plot(time, macd, label="macd", color='red')
+        pyplot.plot(time, signal, label="signal", color='blue')
+        pyplot.legend()
+        pyplot.grid(True)
+        pyplot.ylabel('Wartość składowych')
+        pyplot.xlabel('Data')
+        pyplot.title('Wskaźnik MACD')
+        pyplot.show()
+
+    def show_exchange_rate_diagram(self, time, data):
+        pyplot.plot(time, data, label="macd", color='red')
+        pyplot.ylabel('Kurs [ 1 CHF = ? zł]')
+        pyplot.xlabel('Data')
+        pyplot.title('Kurs franka szwajcarskiego')
+        pyplot.grid(True)
+        pyplot.show()
+
+    def show_parallel_diagrams(self, time, macd, exchange_rate, start_date, end_date):
+        pyplot.figure(1)
+        pyplot.subplot(211)
+        pyplot.plot(time[start_date:end_date], exchange_rate[start_date:end_date])
+        pyplot.grid(True)
+
+        pyplot.subplot(212)
+        print(len(macd.getSignal()))
+        pyplot.plot(time[start_date:end_date], macd.getMacd(26)[start_date:end_date], color="red", label="macd")
+        pyplot.plot(time[start_date:end_date], macd.getSignal(17)[start_date:end_date], color="blue", label="signal")
+        pyplot.legend()
+        pyplot.grid(True)
+        pyplot.show()
 
 class Currency:
     __name = ""
@@ -55,7 +76,6 @@ class Currency:
         exchange_rate = [float(it[2]) for it in data]
 
         return time, exchange_rate
-
 
 class Macd(object):
     __macd = []
@@ -125,20 +145,17 @@ class Macd(object):
     def getBuySellSignals(self, n=0):
         return self.__buy_sell_signals[n::]
 
-
 if __name__ == '__main__':
-    overall = 0
-    # for currency in CURRENCIES:
-    currency = Currency("dolar_hongkongski.csv")
+    currency = Currency("frank_szwajcarski.csv")
     time, exchange_rate = currency.create_data()
     macd = Macd(exchange_rate)
     money_after_simulation = simulation(exchange_rate[26::], macd.getBuySellSignals(), STARTING_MONEY)
 
     profit = floor(money_after_simulation / STARTING_MONEY * 100) - 100
-    overall += profit
 
     print(currency.getName() + ": " + str(profit) + "%")
-    show_diagrams(time[26::], macd.getMacd(26), macd.getSignal(17), currency.getName())
 
-    print("Overall profit: " + str(overall) + "%")
-    print("Avarage profit: " + str(overall / len(CURRENCIES)) + "%")
+    Diagrams.show_macd_signal_diagram(Diagrams(), time[26::], macd.getMacd(26), macd.getSignal(17))
+    Diagrams.show_exchange_rate_diagram(Diagrams(), time[26::], exchange_rate[26::])
+
+    Diagrams.show_parallel_diagrams(Diagrams(), time[26::], macd, exchange_rate[26::], 0, 100)
