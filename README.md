@@ -1,3 +1,1 @@
 # Repozytorium Metody Numeryczne
-
-# test
