@@ -1,1 +1,1 @@
-"# Repozytorium Metody Numeryczne" 
+# Repozytorium Metody Numeryczne
