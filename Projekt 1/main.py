@@ -5,21 +5,56 @@ import csv
 import os
 
 STARTING_MONEY = 1000
+CURRENCIES = os.listdir('./data')
 
+class Simulator:
+    def simulation(self, exchange_rate, signals, money):
+        currency = 0
+        for it in range(len(exchange_rate)):
+            if signals[it] == "buy":
+                if money != 0:
+                    currency = money * exchange_rate[it]
+            elif signals[it] == "sell":
+                if currency != 0:
+                    money = currency * (1 / exchange_rate[it])
+        if money == 0:
+            return currency * (1 / exchange_rate[-1])
+        else:
+            return money
 
-def simulation(exchange_rate, signals, money):
-    currency = 0
-    for it in range(len(exchange_rate)):
-        if signals[it] == "buy":
-            if money != 0:
-                currency = money * exchange_rate[it]
-        elif signals[it] == "sell":
-            if currency != 0:
-                money = currency * (1 / exchange_rate[it])
-    if money == 0:
-        return currency * (1 / exchange_rate[-1])
-    else:
-        return money
+    def multi_currency_simulator(self):
+        overall = float(0.0)
+        for currency in CURRENCIES:
+            currency = Currency(currency)
+            time, exchange_rate = currency.create_data()
+            macd = Macd(exchange_rate)
+            money_after_simulation = self.simulation(exchange_rate[26::], macd.getBuySellSignals(), STARTING_MONEY)
+
+            profit = floor(money_after_simulation / STARTING_MONEY * 100) - 100
+            overall += profit
+            print(currency.getName() + ": " + str(profit) + "%")
+
+            Diagrams.show_macd_signal_diagram(Diagrams(), time[26::], macd.getMacd(26), macd.getSignal(17))
+            Diagrams.show_exchange_rate_diagram(Diagrams(), time[26::], exchange_rate[26::])
+
+            Diagrams.show_parallel_diagrams(Diagrams(), time[26::], macd, exchange_rate[26::], 0, 100)
+        print("OVERALL: " + str(overall) + '%')
+        print('AVARAGE: ' + str(overall / len(CURRENCIES)) + "%")
+
+    def single_currency_simulator(self):
+        currency = Currency('frank_szwajcarski.csv')
+        time, exchange_rate = currency.create_data()
+        macd = Macd(exchange_rate)
+        money_after_simulation = self.simulation(exchange_rate[26::], macd.getBuySellSignals(), STARTING_MONEY)
+
+        profit = floor(money_after_simulation / STARTING_MONEY * 100) - 100
+
+        print(currency.getName() + ": " + str(profit) + "%")
+
+        Diagrams.show_macd_signal_diagram(Diagrams(), time[26::], macd.getMacd(26), macd.getSignal(17))
+        Diagrams.show_exchange_rate_diagram(Diagrams(), time[26::], exchange_rate[26::])
+
+        Diagrams.show_parallel_diagrams(Diagrams(), time[26::], macd, exchange_rate[26::], 100, 200)
 
 class Diagrams:
     def show_macd_signal_diagram(self, time, macd, signal):
@@ -47,7 +82,6 @@ class Diagrams:
         pyplot.grid(True)
 
         pyplot.subplot(212)
-        print(len(macd.getSignal()))
         pyplot.plot(time[start_date:end_date], macd.getMacd(26)[start_date:end_date], color="red", label="macd")
         pyplot.plot(time[start_date:end_date], macd.getSignal(17)[start_date:end_date], color="blue", label="signal")
         pyplot.legend()
@@ -77,7 +111,7 @@ class Currency:
 
         return time, exchange_rate
 
-class Macd(object):
+class Macd:
     __macd = []
     __signal = []
     __buy_sell_signals = []
@@ -129,9 +163,9 @@ class Macd(object):
         tmp_signal = self.getSignal(17)
 
         for it in range(1, len(tmp_macd)):
-            if tmp_macd[it - 1] > tmp_signal[it - 1] and tmp_macd[it] < tmp_signal[it]:
+            if tmp_macd[it - 1] > tmp_signal[it - 1] and tmp_macd[it] < tmp_signal[it] and tmp_signal[it] < 0:
                 self.__buy_sell_signals.append("sell")
-            elif tmp_macd[it - 1] < tmp_signal[it - 1] and tmp_macd[it] > tmp_signal[it]:
+            elif tmp_macd[it - 1] < tmp_signal[it - 1] and tmp_macd[it] > tmp_signal[it] and tmp_signal[it] > 0:
                 self.__buy_sell_signals.append("buy")
             else:
                 self.__buy_sell_signals.append("none")
@@ -146,16 +180,4 @@ class Macd(object):
         return self.__buy_sell_signals[n::]
 
 if __name__ == '__main__':
-    currency = Currency("frank_szwajcarski.csv")
-    time, exchange_rate = currency.create_data()
-    macd = Macd(exchange_rate)
-    money_after_simulation = simulation(exchange_rate[26::], macd.getBuySellSignals(), STARTING_MONEY)
-
-    profit = floor(money_after_simulation / STARTING_MONEY * 100) - 100
-
-    print(currency.getName() + ": " + str(profit) + "%")
-
-    Diagrams.show_macd_signal_diagram(Diagrams(), time[26::], macd.getMacd(26), macd.getSignal(17))
-    Diagrams.show_exchange_rate_diagram(Diagrams(), time[26::], exchange_rate[26::])
-
-    Diagrams.show_parallel_diagrams(Diagrams(), time[26::], macd, exchange_rate[26::], 0, 100)
+    Simulator.single_currency_simulator(Simulator())
