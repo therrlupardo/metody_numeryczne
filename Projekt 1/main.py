@@ -76,12 +76,12 @@ class Diagrams:
         pyplot.show()
 
     def show_parallel_diagrams(self, time, macd, exchange_rate, start_date, end_date):
-        print(str(time[start_date]) + " " + str(time[end_date-1]))
+       # print(str(time[start_date]) + " " + str(time[end_date-1]))
         pyplot.figure(1)
         pyplot.subplot(211)
         pyplot.plot(time[start_date:end_date], exchange_rate[start_date:end_date])
         pyplot.grid(True)
-        pyplot.ylabel("Kurs")
+        pyplot.ylabel("Kurs [ 1 CHF = ? zł]")
 
         pyplot.title("Kurs waluty")
         pyplot.subplot(212)
@@ -201,8 +201,8 @@ class Macd:
         return self.__buy_sell_signals[n::]
 
 if __name__ == '__main__':
-    # print("CLEAR")
-    # Simulator.multi_currency_simulator(Simulator(), False)
-    # print("ENCHANTED")
-    # Simulator.multi_currency_simulator(Simulator(), True)
-    Simulator.single_currency_simulator(Simulator(), 'frank_szwajcarski.csv', True)
+    print("CLEAR")
+    Simulator.multi_currency_simulator(Simulator(), False)
+    print("ENCHANTED")
+    Simulator.multi_currency_simulator(Simulator(), True)
+    # Simulator.single_currency_simulator(Simulator(), 'frank_szwajcarski.csv', False)

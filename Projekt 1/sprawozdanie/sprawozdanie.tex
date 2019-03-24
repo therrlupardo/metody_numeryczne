@@ -5,7 +5,7 @@
 \usepackage[a4paper, total={7in, 10in}]{geometry}
 \usepackage{listings}
 \graphicspath{ {./images/} }
-\title{Wskaźnik Giełdowy MACD - frank szwajcarski}
+\title{Wskaźnik Giełdowy MACD}
 \date{23.03.2018}
 \author{Mateusz Buchajewicz}
 \begin{document}
@@ -57,10 +57,59 @@ Linia sygnałowa SINGAL jest obliczana jako $ EMA_{9} $ ze składowej MACD.
 
 \newpage
 
-\section{Analiza techniczna}
+\section{Analiza}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.7]{images/wykres_bez_ulepszenia.png}
+    \caption{Wykres kursu franka szwajcarskiego i wskaźnika MACD w okresie 02.06.2016 - 20.10.2016}
+\end{figure}
 
 
+Warto zwrócić uwagę, iż w domyślnej wersji algorytmu sygnały zakupu i sprzedaży generowane są za każdym przecięciem 
+linii sygnałowej SIGNAL i składowej MACD.
+Taka konfiguracja pozwala na osiągnięcie około 19\% zysku. \\
+Ograniczenie częstości wysyłania sygnałów pozwala na znaczące zwiększenie zysku. Można to zrobić na przykład wysyłając sygnał
+tylko wtedy, gdy wartość składowej MACD jest większa od 0 (dla sygnału zakupu), 
+bądź mniejsza (dla sygnału sprzedaży). Potencjalne zwiększenie zysku obrazuje poniższa tabela: (Wszystkie dane są z okresu od 01.04.2015 do 19.03.2019. Źródło: money.pl) \\
+\begin{center} 
+    \begin{tabular}  { | c || c | c || c |  }
+        \hline
+        WALUTA & PRZED & PO & RÓŻNICA \\
+        \hline
+        \hline
+        dolar amerykański & 1\% & 35\% & +34\% \\
+        \hline
+        dolar hongkongski & 6\% & 33\% & +27\% \\
+        \hline
+        euro & -5\% & 12\% & +17\% \\
+        \hline
+        frank szwajcarski & 19\% & 30\% & +11\% \\
+        \hline
+        jen japoński & 5\% & 30\% & +25\% \\
+        \hline
+        korona norweska & -5\% & 37\% & +42\% \\
+        \hline
+        peso & -8\% & 25\% & +37\% \\
+        \hline 
+        real brazylisjki & 11\% & 20\% & +8\% \\
+        \hline
+        ringgit malezyjski & 15\% & 26\% & +11\% \\
+        \hline 
+        rubel rosyjski & 14\% & 67\% & +43\% \\
+        \hline
+        \hline
+        SUMA & 53\% & 315\% & +262\% \\
+        \hline
+        ŚREDNIA & 5.3\% & 31.5\% & +26.2\% \\
+        \hline
+    \end{tabular}
+\end{center}
 \newpage
-\section{Podsumowanie}
+\section{Wnioski}
+Jak widać na powyższej tabeli, zbyt częste wykonywanie operacji sprzedaży / zakupu może zmniejszyć zyski,
+ a nawet spowodować straty, co najlepiej obrazuje przykład korony norweskiej. W związku z tym należy stwierdzić,
+  iż metoda wskaźnika giełdowego MACD lepiej nadaje się do inwestycji długoterminowych niż krótkoterminowych, 
+  jest więc dość przydatna podczas analizy technicznej.
 
 \end{document}
