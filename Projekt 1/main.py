@@ -201,8 +201,8 @@ class Macd:
         return self.__buy_sell_signals[n::]
 
 if __name__ == '__main__':
-    print("CLEAR")
-    Simulator.multi_currency_simulator(Simulator(), False)
-    print("ENCHANTED")
-    Simulator.multi_currency_simulator(Simulator(), True)
-    # Simulator.single_currency_simulator(Simulator(), 'frank_szwajcarski.csv', False)
+    # print("CLEAR")
+    # Simulator.multi_currency_simulator(Simulator(), False)
+    # print("ENCHANTED")
+    # Simulator.multi_currency_simulator(Simulator(), True)
+    Simulator.single_currency_simulator(Simulator(), 'frank_szwajcarski.csv', False)
