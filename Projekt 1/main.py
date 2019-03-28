@@ -38,10 +38,10 @@ class Simulator:
             overall += profit
             print(currency.getName() + ": " + str(profit) + "%")
 
-            Diagrams.show_macd_signal_diagram(Diagrams(), time[35::], macd.getMacd(35), macd.getSignal())
+            Diagrams.show_macd_signal_diagram(Diagrams(), time[35::], macd.getMacd(35), macd.getSignal(), currency.getName())
             Diagrams.show_exchange_rate_diagram(Diagrams(), time[35::], exchange_rate[35::], currency.getName())
 
-            Diagrams.show_parallel_diagrams(Diagrams(), time[35::], macd, exchange_rate[35::], 0, 100)
+            Diagrams.show_parallel_diagrams(Diagrams(), time[35::], macd, exchange_rate[35::], 0, 100, currency.getName())
         print("OVERALL: " + str(overall) + '%')
         print('AVARAGE: ' + str(overall / len(CURRENCIES)) + "%")
 
@@ -55,44 +55,45 @@ class Simulator:
 
         print(currency.getName() + ": " + str(profit) + "%")
 
-        Diagrams.show_macd_signal_diagram(Diagrams(), time[35::], macd.getMacd(35), macd.getSignal())
-        Diagrams.show_exchange_rate_diagram(Diagrams(), time[35::], exchange_rate[35::])
-        Diagrams.show_parallel_diagrams(Diagrams(), time[35::], macd, exchange_rate[35::], 270, 370)
+        Diagrams.show_macd_signal_diagram(Diagrams(), time[35::], macd.getMacd(35), macd.getSignal(), currency.getName())
+        Diagrams.show_exchange_rate_diagram(Diagrams(), time[35::], exchange_rate[35::], currency.getName())
+        Diagrams.show_parallel_diagrams(Diagrams(), time[35::], macd, exchange_rate[35::], 270, 370, currency.getName())
 
 class Diagrams:
-    def show_macd_signal_diagram(self, time, macd, signal):
+    def show_macd_signal_diagram(self, time, macd, signal, name):
         pyplot.plot(time, macd, label="macd", color='blue')
         pyplot.plot(time, signal, label="signal", color='red')
         pyplot.legend()
         pyplot.grid(True)
-        pyplot.ylabel('Wartość składowych (jen)')
+        pyplot.ylabel('Wartość składowych (' + name + ')')
         pyplot.xlabel('Data (yyyy-mm)')
         pyplot.title('Wskaźnik MACD')
         pyplot.show()
 
-    def show_exchange_rate_diagram(self, time, data):
+    def show_exchange_rate_diagram(self, time, data, name):
         pyplot.plot(time, data, label="macd", color='red')
-        pyplot.ylabel('Kurs (Jen/PLN)')
+        pyplot.ylabel('Kurs (' + name + '/PLN)')
         pyplot.xlabel('Data (yyyy-mm)')
-        pyplot.title('Kurs jena japońskiego')
+        pyplot.title('Kurs ' + name)
         pyplot.grid(True)
         pyplot.show()
 
-    def show_parallel_diagrams(self, time, macd, exchange_rate, start_date, end_date):
+    def show_parallel_diagrams(self, time, macd, exchange_rate, start_date, end_date, name):
         pyplot.figure(1)
         pyplot.subplot(211)
         pyplot.plot(time[start_date:end_date], exchange_rate[start_date:end_date])
         pyplot.grid(True)
-        pyplot.ylabel("Kurs (jen/PLN)")
+        pyplot.ylabel("Kurs (" + name + "/PLN)")
 
-        pyplot.title("Kurs jena japońskiego")
+        pyplot.title("Kurs " + name)
         pyplot.subplot(212)
         pyplot.plot(time[start_date:end_date], macd.getMacd(35)[start_date:end_date], color="blue", label="macd")
         pyplot.plot(time[start_date:end_date], macd.getSignal()[start_date:end_date], color="red", label="signal")
         pyplot.legend()
         pyplot.grid(True)
         pyplot.title("Składowe wskaźnika MACD")
-        pyplot.ylabel("Wartość składowej (jen)")
+        pyplot.ylabel("Wartość składowej ("+name+")")
+
         pyplot.xlabel("Data (yyyy-mm)")
         pyplot.show()
 
@@ -200,8 +201,14 @@ class Macd:
         return self.__buy_sell_signals[n::]
 
 if __name__ == '__main__':
-    # print("CLEAR")
-    # Simulator.multi_currency_simulator(Simulator(), False)
-    # print("ENCHANTED")
-    # Simulator.multi_currency_simulator(Simulator(), True)
+    # Run only for specified currency, without upgrades
     Simulator.single_currency_simulator(Simulator(), 'jen_japonski.csv', False)
+
+    # Run only for specified currency, without upgrades
+    # Simulator.single_currency_simulator(Simulator(), 'jen_japonski.csv', True)
+
+    # Run for all, without upgrades
+    # Simulator.multi_currency_simulator(Simulator(), False)
+
+    # Run for all, with upgrades
+    # Simulator.multi_currency_simulator(Simulator(), True)
