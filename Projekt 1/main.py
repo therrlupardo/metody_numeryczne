@@ -15,16 +15,12 @@ class Simulator:
             if signals[it] == "buy":
                 if money != 0:
                     currency = float(money / exchange_rate[it])
-                    # print("currency = " + str(money) + " / " + str(exchange_rate[it]) + " = " + str(currency) + " CHF")
                     money = 0
-                    # print("BUY: " + str(money) + " " + str(currency))
 
             elif signals[it] == "sell":
                 if currency != 0:
                     money = currency * exchange_rate[it]
-                    #print("money = " + str(currency) + " * " + str(exchange_rate[it]) + " = " + str(money) + " PLN")
                     currency = 0
-                    # print("SELL: " + str(money) + " " + str(currency))
         if money == 0:
             return float(currency * exchange_rate[-1])
         else:
@@ -43,7 +39,7 @@ class Simulator:
             print(currency.getName() + ": " + str(profit) + "%")
 
             Diagrams.show_macd_signal_diagram(Diagrams(), time[35::], macd.getMacd(35), macd.getSignal())
-            Diagrams.show_exchange_rate_diagram(Diagrams(), time[35::], exchange_rate[35::])
+            Diagrams.show_exchange_rate_diagram(Diagrams(), time[35::], exchange_rate[35::], currency.getName())
 
             Diagrams.show_parallel_diagrams(Diagrams(), time[35::], macd, exchange_rate[35::], 0, 100)
         print("OVERALL: " + str(overall) + '%')
@@ -58,7 +54,6 @@ class Simulator:
         profit = floor(money_after_simulation / STARTING_MONEY * 100) - 100
 
         print(currency.getName() + ": " + str(profit) + "%")
-        print(money_after_simulation)
 
         Diagrams.show_macd_signal_diagram(Diagrams(), time[35::], macd.getMacd(35), macd.getSignal())
         Diagrams.show_exchange_rate_diagram(Diagrams(), time[35::], exchange_rate[35::])
@@ -66,20 +61,20 @@ class Simulator:
 
 class Diagrams:
     def show_macd_signal_diagram(self, time, macd, signal):
-        pyplot.plot(time, macd, label="macd", color='red')
-        pyplot.plot(time, signal, label="signal", color='blue')
+        pyplot.plot(time, macd, label="macd", color='blue')
+        pyplot.plot(time, signal, label="signal", color='red')
         pyplot.legend()
         pyplot.grid(True)
-        pyplot.ylabel('Wartość składowych')
-        pyplot.xlabel('Data')
+        pyplot.ylabel('Wartość składowych (jen)')
+        pyplot.xlabel('Data (yyyy-mm)')
         pyplot.title('Wskaźnik MACD')
         pyplot.show()
 
     def show_exchange_rate_diagram(self, time, data):
         pyplot.plot(time, data, label="macd", color='red')
-        pyplot.ylabel('Kurs [ 1 CHF = ? zł]')
-        pyplot.xlabel('Data')
-        pyplot.title('Kurs franka szwajcarskiego')
+        pyplot.ylabel('Kurs [ Jen/PLN]')
+        pyplot.xlabel('Data (yyyy-mm)')
+        pyplot.title('Kurs jena japońskiego')
         pyplot.grid(True)
         pyplot.show()
 
@@ -88,17 +83,17 @@ class Diagrams:
         pyplot.subplot(211)
         pyplot.plot(time[start_date:end_date], exchange_rate[start_date:end_date])
         pyplot.grid(True)
-        pyplot.ylabel("Kurs [ 1 CHF = ? zł]")
+        pyplot.ylabel("Kurs (jen/PLN)")
 
-        pyplot.title("Kurs waluty")
+        pyplot.title("Kurs jena japońskiego")
         pyplot.subplot(212)
-        pyplot.plot(time[start_date:end_date], macd.getMacd(35)[start_date:end_date], color="red", label="macd")
-        pyplot.plot(time[start_date:end_date], macd.getSignal()[start_date:end_date], color="blue", label="signal")
+        pyplot.plot(time[start_date:end_date], macd.getMacd(35)[start_date:end_date], color="blue", label="macd")
+        pyplot.plot(time[start_date:end_date], macd.getSignal()[start_date:end_date], color="red", label="signal")
         pyplot.legend()
         pyplot.grid(True)
         pyplot.title("Składowe wskaźnika MACD")
-        pyplot.ylabel("Wartość składowej")
-        pyplot.xlabel("Data")
+        pyplot.ylabel("Wartość składowej (jen)")
+        pyplot.xlabel("Data (yyyy-mm")
         pyplot.show()
 
 class Currency:
@@ -208,5 +203,5 @@ if __name__ == '__main__':
     # print("CLEAR")
     # Simulator.multi_currency_simulator(Simulator(), False)
     # print("ENCHANTED")
-    Simulator.multi_currency_simulator(Simulator(), True)
-    # Simulator.single_currency_simulator(Simulator(), 'frank_szwajcarski.csv', True)
+    # Simulator.multi_currency_simulator(Simulator(), True)
+    Simulator.single_currency_simulator(Simulator(), 'jen_japonski.csv', False)
