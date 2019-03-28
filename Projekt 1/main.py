@@ -72,7 +72,7 @@ class Diagrams:
 
     def show_exchange_rate_diagram(self, time, data):
         pyplot.plot(time, data, label="macd", color='red')
-        pyplot.ylabel('Kurs [ Jen/PLN]')
+        pyplot.ylabel('Kurs (Jen/PLN)')
         pyplot.xlabel('Data (yyyy-mm)')
         pyplot.title('Kurs jena japońskiego')
         pyplot.grid(True)
@@ -93,7 +93,7 @@ class Diagrams:
         pyplot.grid(True)
         pyplot.title("Składowe wskaźnika MACD")
         pyplot.ylabel("Wartość składowej (jen)")
-        pyplot.xlabel("Data (yyyy-mm")
+        pyplot.xlabel("Data (yyyy-mm)")
         pyplot.show()
 
 class Currency:
