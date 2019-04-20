@@ -84,12 +84,30 @@ W ramach tego zadania rozwiązano powyższy układ równań za pomocą
 W tym przypadku norma z residuum wyniosła około \(1.8956*10^{-15}\),
  co oznacza wysoką dokładność wykonanych obliczeń.
 \section{Zadanie E}
-W ramach tego zadania utworzono wykres zależności czasu od ilości iteracji dla powyższych metod. Zależność została przedstawiona na poniższym wykresie:
+W ramach tego zadania utworzono wykres zależności czasu od liczby niewiadomych dla powyższych metod. Zależność została przedstawiona na poniższym wykresie: \\
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.7]{wykres.png}
-    \caption{ wykres zależności czasu od ilości iteracji dla metod Jacobiego, Gaussa-Seidla i LU}
-\end{figure}
+    \caption{ wykres zależności czasu od liczby niewiadomych dla metod Jacobiego, Gaussa-Seidla i LU}
+\end{figure} \\
+Dokładne czasy przedstawia poniższa tabela:
+\begin{center} 
+    \begin{tabular}  { | c | c | c | c |  }
+        \hline
+       Ilość iteracji & Jacobi & Gauss-Seidl & LU \\
+       \hline
+       100 & 0.33 & 0.19 & 0.10\\
+       \hline
+       500 & 12.23 & 8.35 & 17.29 \\
+       \hline
+       1000 & 46.18 & 22.26 & 136.38 \\
+       \hline
+       2000 & 205.61 & 112.92 & 1088.65 \\
+       \hline
+       3000 & 427.39 & 255.28 & 3611.52 \\
+       \hline
+    \end{tabular}
+\end{center}
 \section{Zadanie F}
-Oczekiwanie na wygenrowanie wykresu, wtedy będą wnioski.
+Czas wykonywania obliczeń dla każdej z powyższych metod wzrasta wraz ze wzrostem liczby niewiadomych. Metoda bezpośrednia, faktoryzacja LU jest najdokładniejsza, ale zajmuje znaczną ilość czasu (przy 3000 niewiadomych czas wykonywania wynosi około godzinę). Metody iteracyjne nie są tak dokładne, ale wykonują się znacząco szybciej. Warto też zauważyć, że z metod iteracyjnych dla metody Gaussa-Seidla rozwiązanie jest znajdowane blisko 2 razy szybciej dla każdej sprawdzanej ilości niewiadomych.
 \end{document}
