@@ -1,133 +1,179 @@
 import time
-from math import sin
-import numpy as np
+
+from matplotlib import pyplot
+
+from vector_methods import *
+from matrix_methods import *
+from Matirx import *
 
 
-def jacobi(A, b):
-    time0 = time.time()
-    x = vec_zeros(len(A[0]))
-    D = diag(A)
-    R = A - diagflat(D)
-    k = 0
+def jacobi(_a, _b):
+    # init
+    __time0 = time.time()
+    __matrix_a = copy_matrix(_a)
+    __vector_b = copy_vector(_b)
+    __k = 0
+    __tmp_x = vec_zeros(len(__matrix_a))
+    __x = copy_vector(__tmp_x)
+
+    # perform
     while True:
-        x = (b - dot_product(R, x)) / D
-        res = dot_product(A, x) - b
-        if np.linalg.norm(res) < pow(10, -9):
+        for __i in range(len(__matrix_a)):
+            __value = __vector_b[__i]
+            for __j in range(len(__matrix_a)):
+                if __i != __j:
+                    __value -= __matrix_a[__i][__j] * __x[__j]
+            __value /= __matrix_a[__i][__i]
+            __tmp_x[__i] = __value
+        __x = copy_vector(__tmp_x)
+        __res = vector_sub_vector(dot_product(__matrix_a, __x), __vector_b)
+
+        if norm(__res) < pow(10, -9):
             break
-        k = k + 1
+        __k += 1
+
+    # results
     print("Jacobi's method")
-    print('time:', time.time()-time0)
-    print('iterations:', k)
-    return x, k
+    print('time:', time.time() - __time0)
+    print('iterations:', __k)
+    print()
+    return time.time()-__time0
 
 
-def gauss_seidel(A, b):
-    time0 = time.time()
-    k = 0
-    L = np.tril(A)
-    U = A - L
-    x = vec_zeros(len(A[0]))
+def gauss_seidel(_a, _b):
+    # init
+    __time0 = time.time()
+    __k = 0
+    __matrix_a = copy_matrix(_a)
+    __vector_b = copy_vector(_b)
+    __vector_x = vec_zeros(len(__matrix_a[0]))
+
+    # preform
     while True:
-        x = dot_product(np.linalg.inv(L), b - dot_product(U, x))
-        res = dot_product(A, x) - b
-        if np.linalg.norm(res) < pow(10, -9):
+        for __i in range(len(__matrix_a)):
+            __tmp = __vector_b[__i]
+            for __j in range(len(__matrix_a)):
+                if __i != __j:
+                    __tmp -= __matrix_a[__i][__j] * __vector_x[__j]
+            __tmp /= __matrix_a[__i][__i]
+            __vector_x[__i] = __tmp
+
+        __res = vector_sub_vector(dot_product(__matrix_a, __vector_x), __vector_b)
+        if norm(__res) < pow(10, -9):
             break
-        k += 1
-    print("Gauss-cd pr   method")
-    print("time:", time.time()-time0)
-    print("iterations:", k)
-    return x, k
+        __k += 1
+
+    # results
+    print("Gauss-Seidel's method")
+    print("time:", time.time() - __time0)
+    print("iterations:", __k)
+    print()
+    return time.time()-__time0
 
 
-def lu_factorization():
-    pass
+def lu_factorization(_a, _b):
+    # init
+    __time0 = time.time()
+    __m = len(_a)
+
+    __matrix_a = copy_matrix(_a)
+    __matrix_l = diagonal_to_square_matrix(vec_ones(__m))
+    __matrix_u = matrix_zeros(__m, __m)
+
+    __vector_b = copy_vector(_b)
+    __vector_x = vec_ones(__m)
+    __vector_y = vec_zeros(__m)
+
+    # 1. perform - create matrices L and U
+    # LUx = b
+    for __j in range(__m):
+        for __i in range(__j + 1):
+            __matrix_u[__i][__j] += __matrix_a[__i][__j]
+            for __k in range(__i):
+                __matrix_u[__i][__j] -= __matrix_l[__i][__k] * __matrix_u[__k][__j]
+
+        for __i in range(__j + 1, __m):
+            for __k in range(__j):
+                __matrix_l[__i][__j] -= __matrix_l[__i][__k] * __matrix_u[__k][__j]
+            __matrix_l[__i][__j] += __matrix_a[__i][__j]
+            __matrix_l[__i][__j] /= __matrix_u[__j][__j]
+
+    # 3. perform - solve Ly = b
+    for __i in range(__m):
+        __value = __vector_b[__i]
+        for __j in range(__i):
+            __value -= __matrix_l[__i][__j] * __vector_y[__j]
+
+        __vector_y[__i] = __value / __matrix_l[__i][__i]
+
+    # 4. perform - solve Ux = y
+    for __i in range(__m - 1, -1, -1):
+        __value = __vector_y[__i]
+        for __j in range(__i + 1, __m):
+            __value -= __matrix_u[__i][__j] * __vector_x[__j]
+        __vector_x[__i] = __value / __matrix_u[__i][__i]
+
+    # results
+    __res = vector_sub_vector(dot_product(__matrix_a, __vector_x), __vector_b)
+    print("LU method")
+    print('time:', time.time() - __time0)
+    print("Residuum norm:", norm(__res))
+    print()
+    return time.time()-__time0
 
 
-def vec_zeros(length):
-    vec = []
-    for _ in range(length):
-        vec.append(0)
-    return vec
+def dot_product(_a, _b):
+    __copy_a = copy_matrix(_a)
+    __copy_b = copy_vector(_b)
+    __m = len(__copy_a)
+    __n = len(__copy_a[0])
+    __c = vec_zeros(__m)
 
-
-def matrix_zeros(x, y):
-    matrix = []
-    for _ in range(y):
-        row = []
-        for _ in range(x):
-            row.append(int(0))
-        matrix.append(row)
-    return matrix
-
-
-def dot_product(A, B):
-    # A - m*n matrix
-    # B - vector n ints
-    m = len(A)
-    n = len(A[0])
-    k = 1
-
-    C = vec_zeros(m)
-
-    for i in range(m):
-        for l in range(n):
-            C[i] += A[i][l] * B[l]
-    return C
-
-
-def diag(A):
-    # A n*n matrix
-    diag = []
-    for i in range(len(A)):
-        diag.append(A[i][i])
-    return diag
-
-
-def diagflat(vector):
-    A = matrix_zeros(len(vector), len(vector))
-    for i in range(len(vector)):
-        A[i][i] = vector[i]
-    return A
-
-
-class Matrix:
-    def __init__(self, index):
-        self.read_index(index)
-        self.create_default_matrixes()
-
-    def create_default_matrixes(self):
-        self.A = []
-        self.B = []
-        for i in range(self.N):
-            row = []
-            for j in range(self.N):
-                if i == j:
-                    row.append(int(5 + self.e))
-                elif i - 2 <= j <= i + 2:
-                    row.append(int(-1))
-                else:
-                    row.append(int(0))
-            self.A.append(row)
-            self.B.append(sin(i * (self.f + 1)))
-
-    def read_index(self, index):
-        self.f = int(index%10)
-        index /= 10
-        self.e = int(index%10)
-        index /= 10
-        self.d = int(index%10)
-        index /= 10
-        self.c = int(index%10)
-        index /= 10
-        self.b = int(index%10)
-        index /= 10
-        self.a = int(index)
-        self.N = int(9 * self.c * self.d)
-
-    def print_matrix(self):
-        for row in self.A:
-            print(row)
+    for __i in range(__m):
+        for l in range(__n):
+            __c[__i] += __copy_a[__i][l] * __copy_b[l]
+    return __c
 
 
 if __name__ == "__main__":
-    matrix = Matrix(171619)
+    # A
+    matrix_base = Matrix(171619)
+    matrix_A = matrix_base.create_matrix_a()
+    vector_b = matrix_base.create_vector_b()
+    # B
+    jacobi(matrix_A, vector_b)
+    gauss_seidel(matrix_A, vector_b)
+
+    # C
+    matrix_C = matrix_base.create_matrix_c()
+    # jacobi(matrix_C, vector_b)  # błąd przy 1280 iteracji
+
+    # gauss_seidel(matrix_C, vector_b)  # błąd przy 619 iteracji
+
+    # D
+    lu_factorization(matrix_C, vector_b)
+
+    # E
+    N = [100 * i for i in range(1, 30)]
+    time_jacobi = []
+    time_gs = []
+    time_lu = []
+    for n in N:
+        print("Size:", n)
+        matrix_base.N = n
+        matrix_A = matrix_base.create_matrix_a()
+        vector_b = matrix_base.create_vector_b()
+
+        time_jacobi.append(jacobi(matrix_A, vector_b))
+        time_gs.append(gauss_seidel(matrix_A, vector_b))
+        time_lu.append(lu_factorization(matrix_A, vector_b))
+
+    pyplot.plot(N, time_jacobi, label="Jacobi", color="red")
+    pyplot.plot(N, time_gs, label="Gauss-Seidl", color="blue")
+    pyplot.plot(N, time_lu, label="LU", color="green")
+    pyplot.legend()
+    pyplot.grid(True)
+    pyplot.ylabel('Czas (s)')
+    pyplot.xlabel('Ilość iteracji')
+    pyplot.title('Zależność czasu od ilości iteracji')
+    pyplot.show()
