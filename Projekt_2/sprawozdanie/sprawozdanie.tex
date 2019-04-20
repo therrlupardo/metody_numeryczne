@@ -56,7 +56,7 @@ W ramach tego zadania rozwiązano powyższy układ równań za pomocą metod ite
         \hline
     \end{tabular}
 \end{center}
-Iterację przeprowadzano, dopóki norma z wektora residuum była niemniejsza niż \(10^{-9}\).
+Iterację przeprowadzano, dopóki norma z wektora residuum była większa niż \(10^{-9}\).
 \newpage
 \section{Zadanie C}
 W ramach tego zadania utworzono macierz \textbf{C} podobnie jak w zadaniu 1, przy czym a1 = 3. \\
@@ -76,13 +76,14 @@ Macierz \textbf{C} wygląda w ten sposób: \\
 \]
 Próby obliczenia układu równań \(\mathbf{Cx}=\mathbf{b}\) 
 za pomocą powyższych metod iteracyjncyh kończyły się pythonowym błędem "\textit{OverflowError - Result too large}" 
-(odpowiednio po 1280 iteracjach metodą Jacobiego i 619 metodą Gaussa-Seidla),
+(podczas liczenia normy wektora residuum; odpowiednio po 1280 iteracjach metodą Jacobiego i 619 metodą Gaussa-Seidla),
 z czego wnioskuję, że te metody iteracyjne dla takich wartości nie zbiegają się.
 \section{Zadanie D}
 W ramach tego zadania rozwiązano powyższy układ równań za pomocą
- metody bezpośreniej: faktoryzacji LU. 
-W tym przypadku norma z residuum wyniosła około \(1.8956*10^{-15}\),
- co oznacza wysoką dokładność wykonanych obliczeń.
+ metody bezpośredniej: faktoryzacji LU. 
+W tym przypadku norma z residuum wyniosła około \(1.8956*10^{-15}\).
+Jest to wynik bliski 0, co oznacza wysoką dokładność wykonanych obliczeń.
+ \newpage
 \section{Zadanie E}
 W ramach tego zadania utworzono wykres zależności czasu od liczby niewiadomych dla powyższych metod. Zależność została przedstawiona na poniższym wykresie: \\
 \begin{figure}[h]
@@ -109,5 +110,6 @@ Dokładne czasy przedstawia poniższa tabela:
     \end{tabular}
 \end{center}
 \section{Zadanie F}
-Czas wykonywania obliczeń dla każdej z powyższych metod wzrasta wraz ze wzrostem liczby niewiadomych. Metoda bezpośrednia, faktoryzacja LU jest najdokładniejsza, ale zajmuje znaczną ilość czasu (przy 3000 niewiadomych czas wykonywania wynosi około godzinę). Metody iteracyjne nie są tak dokładne, ale wykonują się znacząco szybciej. Warto też zauważyć, że z metod iteracyjnych dla metody Gaussa-Seidla rozwiązanie jest znajdowane blisko 2 razy szybciej dla każdej sprawdzanej ilości niewiadomych.
+Czas wykonywania obliczeń dla każdej z powyższych metod wzrasta wraz ze wzrostem liczby niewiadomych. Metoda bezpośrednia, faktoryzacja LU jest najdokładniejsza, ale zajmuje znaczną ilość czasu (przy 3000 niewiadomych czas wykonywania wynosi około godzinę). Metody iteracyjne nie są tak dokładne, ale wykonują się znacząco szybciej. Dla metody Gaussa-Seidla rozwiązanie jest znajdowane blisko 2 razy szybciej niż dla metody Jacobiego dla każdej sprawdzanej ilości niewiadomych. \\
+Z powyższych obserwacji można wywnioskować, że metody iteracyjne lepiej nadają się dla rozwiązywania układów równań z dużą liczbą niewiadomych. Jednak należy zauważyć, że może nastąpić sytuacja z zadania C, gdzie metody iteracyjne nie zbiegały się do rozwiązania. Wtedy jedyną opcją pozostaje rozwiązanie za pomocą metody bezpośredniej.
 \end{document}
