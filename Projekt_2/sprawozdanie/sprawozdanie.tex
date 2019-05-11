@@ -7,7 +7,7 @@
 \usepackage{amsmath}
 \graphicspath{ {./images/} }
 \title{Rozwiązywanie układów równań liniowych}
-\date{20.04.2018}
+\date{20.04.2019}
 \author{Mateusz Buchajewicz}
 \begin{document}
 \maketitle
@@ -21,26 +21,26 @@ Celem zadania było utworzenie układu równań:
 \begin{equation}
 \mathbf{Ax} = \mathbf{b}
 \end{equation} 
-Dla numeru indeksu 171619 otrzymujemy a1 = 6 i N = 54. \newline
+Dla numeru indeksu 171619 otrzymujemy a1 = 11 i N = 81. \newline
 Macierz \textbf{A} dla powyższych danych wygląda w ten sposób: \newline
 \[
 \textbf{A} = 
 \begin{bmatrix}
-    6 & -1 & -1 & 0 & 0 &\dots & 0 & 0 & 0 \\
-    -1 & 6 & -1 & -1 & 0 & \dots & 0 & 0 & 0\\
-    -1 & -1 & 6 & -1 & -1 & \dots & 0 & 0 & 0 \\
-    0 & -1 & -1 & 6 & -1 & \dots & 0 & 0 & 0 \\
+    11 & -1 & -1 & 0 & 0 &\dots & 0 & 0 & 0 \\
+    -1 & 11 & -1 & -1 & 0 & \dots & 0 & 0 & 0\\
+    -1 & -1 & 11 & -1 & -1 & \dots & 0 & 0 & 0 \\
+    0 & -1 & -1 & 11 & -1 & \dots & 0 & 0 & 0 \\
     \vdots & \vdots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots & \vdots \\
-    0 & 0 & 0 & 0 & 0 & \dots & 6 & -1 & -1 \\
-    0 & 0 & 0 & 0 & 0 & \dots & -1 & 6 & -1 \\
-    0 & 0 & 0 & 0 & 0 & \dots & -1 & -1 & 6 \\
+    0 & 0 & 0 & 0 & 0 & \dots & 11 & -1 & -1 \\
+    0 & 0 & 0 & 0 & 0 & \dots & -1 & 11 & -1 \\
+    0 & 0 & 0 & 0 & 0 & \dots & -1 & -1 & 11 \\
 \end{bmatrix}
 \]
-Natomiast wektor \textbf{b} jest obliczany ze wzoru \( \mathbf{b_{i}} = sin(i*(f+1))\), co dla \(f = 9\) daje następujący wektor:
+Natomiast wektor \textbf{b} jest obliczany ze wzoru \( \mathbf{b_{i}} = sin(i*(f+1))\), co dla \(f = 1\) daje następujący wektor:
 \[
     \textbf{b} = 
 \begin{bmatrix}
-    0.0 & -0.54402 & 0.91295 & -0.98803 & \dots & -0.99780 & 0.80112
+    0.0 & 0.90930 & -0.75680 & -0.27942 & \dots & 0.79582 & 0.21943
 \end{bmatrix}^T
 \]
 \section{Zadanie B}
@@ -50,9 +50,9 @@ W ramach tego zadania rozwiązano powyższy układ równań za pomocą metod ite
         \hline
         Metoda & Czas (s) & Liczba iteracji  \\
         \hline
-        Jacobiego & 0.1027 & 67 \\
+        Jacobiego & 0.0625 & 16 \\
         \hline
-        Gaussa-Seidla & 0.0618 & 40 \\
+        Gaussa-Seidla & 0.0469 & 12 \\
         \hline
     \end{tabular}
 \end{center}
@@ -76,12 +76,12 @@ Macierz \textbf{C} wygląda w ten sposób: \\
 \]
 Próby obliczenia układu równań \(\mathbf{Cx}=\mathbf{b}\) 
 za pomocą powyższych metod iteracyjncyh kończyły się pythonowym błędem "\textit{OverflowError - Result too large}" 
-(podczas liczenia normy wektora residuum; odpowiednio po 1280 iteracjach metodą Jacobiego i 619 metodą Gaussa-Seidla),
+(podczas liczenia normy wektora residuum; odpowiednio po 1266 iteracjach metodą Jacobiego i 605 metodą Gaussa-Seidla),
 z czego wnioskuję, że te metody iteracyjne dla takich wartości nie zbiegają się.
 \section{Zadanie D}
 W ramach tego zadania rozwiązano powyższy układ równań za pomocą
  metody bezpośredniej: faktoryzacji LU. 
-W tym przypadku norma z residuum wyniosła około \(1.8956*10^{-15}\).
+W tym przypadku norma z residuum wyniosła około \(1.2928*10^{-15}\).
 Jest to wynik bliski 0, co oznacza wysoką dokładność wykonanych obliczeń.
  \newpage
 \section{Zadanie E}
@@ -97,19 +97,19 @@ Dokładne czasy przedstawia poniższa tabela:
         \hline
        Ilość iteracji & Jacobi & Gauss-Seidl & LU \\
        \hline
-       100 & 0.33 & 0.19 & 0.10\\
+       100 & 0.09 & 0.06 & 0.11\\
        \hline
-       500 & 12.23 & 8.35 & 17.29 \\
+       500 & 3.88 & 1.81 & 17.10 \\
        \hline
-       1000 & 46.18 & 22.26 & 136.38 \\
+       1000 & 11.69 & 9.63 & 138.44 \\
        \hline
-       2000 & 205.61 & 112.92 & 1088.65 \\
+       2000 & 48.42 & 40.09 & 1074.86 \\
        \hline
-       3000 & 427.39 & 255.28 & 3611.52 \\
+       3000 & 106.96 & 69.41 & 3685.58 \\
        \hline
     \end{tabular}
 \end{center}
 \section{Zadanie F}
-Czas wykonywania obliczeń dla każdej z powyższych metod wzrasta wraz ze wzrostem liczby niewiadomych. Metoda bezpośrednia, faktoryzacja LU jest najdokładniejsza, ale zajmuje znaczną ilość czasu (przy 3000 niewiadomych czas wykonywania wynosi około godzinę). Metody iteracyjne nie są tak dokładne, ale wykonują się znacząco szybciej. Dla metody Gaussa-Seidla rozwiązanie jest znajdowane blisko 2 razy szybciej niż dla metody Jacobiego dla każdej sprawdzanej ilości niewiadomych. \\
+Czas wykonywania obliczeń dla każdej z powyższych metod wzrasta wraz ze wzrostem liczby niewiadomych. Metoda bezpośrednia, faktoryzacja LU jest najdokładniejsza, ale zajmuje znaczną ilość czasu (przy 3000 niewiadomych czas wykonywania wynosi około ?). Metody iteracyjne nie są tak dokładne, ale wykonują się znacząco szybciej. Metoda Gaussa-Seidla wymaga mniejszej liczby iteracji i znajduje rozwiązanie szybciej niż metoda Jacobiego, dla każdego rozmiaru danych testowych. Warto zauważyć, że im większe dane, tym większa różnica pomiędzy metodami iteracyjnymi. \\
 Z powyższych obserwacji można wywnioskować, że metody iteracyjne lepiej nadają się dla rozwiązywania układów równań z dużą liczbą niewiadomych. Jednak należy zauważyć, że może nastąpić sytuacja z zadania C, gdzie metody iteracyjne nie zbiegały się do rozwiązania. Wtedy jedyną opcją pozostaje rozwiązanie za pomocą metody bezpośredniej.
 \end{document}

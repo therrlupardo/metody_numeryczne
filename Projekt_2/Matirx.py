@@ -3,13 +3,13 @@ from math import sin
 
 class Matrix:
     def __init__(self, index):
-        self.f = int(index % 10)
-        index /= 10
-        self.e = int(index % 10)
-        index /= 10
         self.d = int(index % 10)
         index /= 10
         self.c = int(index % 10)
+        index /= 10
+        self.e = int(index % 10)
+        index /= 10
+        self.f = int(index % 10)
         self.N = int(9 * self.c * self.d)
 
     def create_matrix(self, a1, a2, a3):
@@ -29,7 +29,7 @@ class Matrix:
         return __A
 
     def create_matrix_a(self):
-        return self.create_matrix(int(self.e * 5), -1, -1)
+        return self.create_matrix(int(self.e + 5), -1, -1)
 
     def create_vector_b(self):
         __b = []

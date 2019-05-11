@@ -154,7 +154,6 @@ if __name__ == "__main__":
     lu_factorization(matrix_C, vector_b)
 
     # E
-    # N = [100 * i for i in range(1, 30)]
     N = [100, 500, 1000, 2000, 3000]
     time_jacobi = []
     time_gs = []
