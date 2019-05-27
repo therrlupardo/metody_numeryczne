@@ -190,7 +190,6 @@ class Macd:
             else:
                 self.__buy_sell_signals.append("none")
 
-
     def getMacd(self, n = 0):
         return self.__macd[n::]
 
