@@ -1,3 +1,4 @@
+import math
 import os
 import csv
 from matrices import matrix_methods, vector_methods, matrix_calculations
@@ -106,12 +107,13 @@ def interpolation_function(points):
 
         for i in range(1, len(points)):
             xi, yi = points[i-1]
-            if x <= float(xi):
+            xj, yj = points[i]
+            if float(xi) <= x <= float(xj):
                 a, b, c, d = param_array[i-1]
-                h = float(xi) - x
+                h = x - float(xi)
                 return a*(h**3)+b*(h**2)+c*h+d
 
-        return 0
+        return -123
 
     return f
 
@@ -121,37 +123,40 @@ def interpolate_with_spline(k):
         f = open('./data/'+file, 'r')
         data = list(csv.reader(f))
 
-        shift = (-1)*(len(data[1:]) % k)
-        interpolation_data = data[1:shift:k]
+        data = data[1:]
+        shift = (-1)*(len(data) % k)
+        if shift != 0:
+            interpolation_data = data[:shift:k]
+        else:
+            interpolation_data = data[::k]
 
         F = interpolation_function(interpolation_data)
 
         distance = []
         height = []
         interpolated_height = []
-        for x, y in data[1:shift]:
+        for point in data:
+            x, y = point
             distance.append(float(x))
             height.append(float(y))
             interpolated_height.append(F(float(x)))
 
         train_distance = []
         train_height = []
-        for x, y in interpolation_data:
+        for point in interpolation_data:
+            x, y = point
             train_distance.append(float(x))
             train_height.append(float(y))
-            # interpolated_height.append(F(float(x)))
+
+        shift = -1 * interpolated_height.count(-123)
 
         pyplot.plot(distance, height, 'r.', label='pełne dane')
-        pyplot.plot(distance, interpolated_height, color='blue', label='funkcja interpolująca')
-        # pyplot.plot(train_distance, train_height, 'g', label='dane do interpolacji')
+        pyplot.plot(distance[:shift], interpolated_height[:shift], color='blue', label='funkcja interpolująca')
+        pyplot.plot(train_distance, train_height, 'g.', label='dane do interpolacji')
         pyplot.legend()
         pyplot.ylabel('Wysokość')
         pyplot.xlabel('Odległość')
-        pyplot.title('Przybliżenie interpolacją Splajnami\'a, ' + str(len(interpolation_data)) + ' punkty(ów)')
+        pyplot.title('Przybliżenie interpolacją Splajnami, ' + str(len(interpolation_data)) + ' punkty(ów)')
         pyplot.suptitle(file)
         pyplot.grid()
         pyplot.show()
-
-
-
-

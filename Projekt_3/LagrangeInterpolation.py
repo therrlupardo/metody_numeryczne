@@ -1,3 +1,4 @@
+import math
 import os
 import csv
 from matplotlib import pyplot
@@ -48,8 +49,15 @@ def interpolate_with_lagrange(k):
         for point in interpolation_data:
             x, y = point
             train_distance.append(float(x))
-            train_height.append(float(y))
+            train_height.append(F(float(x)))
 
+        # odkomentowanie poniższych funkcji pozwoli na wyświetlenie fragmentów aproksymacji bez oscylacji
+        #
+        # n = math.floor(len(distance)/3)
+        #
+        # pyplot.plot(distance[n:2*n], height[n:2*n], 'r.', label='pełne dane')
+        # pyplot.plot(distance[n:2*n], interpolated_height[n:2*n], color='blue', label='funkcja interpolująca')
+        # pyplot.plot(train_distance[n:2*n], train_height[n:2*n], 'g.', label='dane do interpolacji')
         pyplot.semilogy(distance, height, 'r.', label='pełne dane')
         pyplot.semilogy(distance, interpolated_height, color='blue', label='funkcja interpolująca')
         pyplot.semilogy(train_distance, train_height, 'g.', label='dane do interpolacji')
